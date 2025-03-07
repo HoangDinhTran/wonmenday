@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chúc Mừng 8/3</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap');
+
+        body {
+            font-family: 'Arial', sans-serif;
+            text-align: center;
+            background-color: #ffebf0;
+            overflow: hidden;
+            position: relative;
+        }
+
+        h1 {
+            font-family: 'Dancing Script', cursive;
+            font-size: 50px;
+            color: #d6336c;
+            animation: fadeIn 2s ease-in-out;
+        }
+
+        .container {
+            margin-top: 50px;
+        }
+
+        .message {
+            font-size: 22px;
+            color: #333;
+            opacity: 0;
+            animation: fadeIn 3s ease-in-out forwards;
+        }
+
+        .gift-btn {
+            margin-top: 20px;
+            padding: 12px 24px;
+            font-size: 18px;
+            background-color: #ff69b4;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: 0.3s;
+        }
+
+        .gift-btn:hover {
+            background-color: #d6336c;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .gift-container {
+            margin-top: 20px;
+        }
+
+        .gift-item {
+            display: none;
+            text-align: center;
+            margin-top: 20px;
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        .gift-item img {
+            width: 180px;
+            height: 180px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .gift-item p {
+            font-size: 20px;
+            color: #d6336c;
+            margin-top: 10px;
+        }
+
+        /* Hiệu ứng hoa rơi */
+        .flower {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            background-image: url('https://i.imgur.com/dpXJ5Mr.png'); /* Hình hoa */
+            background-size: contain;
+            animation: fall linear infinite;
+        }
+
+        @keyframes fall {
+            from { transform: translateY(-100px) rotate(0deg); opacity: 1; }
+            to { transform: translateY(100vh) rotate(360deg); opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+    <audio id="bg-music" loop>
+        <source src="your-music.mp3" type="audio/mpeg">
+    </audio>
+
+    <div class="container">
+        <h1>Happy Women's Day 💖</h1>
+        <p class="message">Chúc ThuyLynh 🌸</p>
+        <button class="gift-btn" onclick="showGift()">Click nhé!!!</button>
+        <div class="gift-container">
+            <div class="gift-item" id="gift1">
+                <img src="image.JPG" alt="Hoa">
+                <p>💐 Luôn luôn vui vẻ, mỗi ngày đều cười tươi!</p>
+            </div>
+            <div class="gift-item" id="gift2">
+                <img src="image2.JPG" alt="Socola">
+                <p>🍫 Không còn buồn phiền tiêu cực!</p>
+            </div>
+            <div class="gift-item" id="gift3">
+                <img src="image3.JPG" alt="Lời chúc">
+                <p>💖 Thành công và may mắn trên những dự định sắp tới!</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentGift = 0;
+        function showGift() {
+            let gifts = document.querySelectorAll(".gift-item");
+            let giftContainer = document.querySelector(".gift-container");
+
+            document.getElementById("bg-music").play();
+            giftContainer.style.display = "block";
+
+            // Ẩn tất cả trước khi hiển thị tiếp
+            gifts.forEach(gift => gift.style.display = "none");
+
+            if (currentGift >= gifts.length) {
+                currentGift = 0; // Reset nếu hết ảnh
+            }
+
+            gifts[currentGift].style.display = "block";
+            currentGift++;
+        }
+
+        // Hàm tạo hiệu ứng hoa rơi
+        function createFlower() {
+            let flower = document.createElement("div");
+            flower.className = "flower";
+
+            // Chọn hình ảnh hoa (có thể thay thế bằng hình ảnh bạn thích)
+            let flowerImage = "image4.JPG"; 
+
+            // Thiết lập kiểu dáng
+            flower.style.position = "absolute";
+            flower.style.left = Math.random() * window.innerWidth + "px";
+            flower.style.top = "-50px";
+            flower.style.width = "40px";
+            flower.style.height = "40px";
+            flower.style.backgroundImage = `url(${flowerImage})`;
+            flower.style.backgroundSize = "cover";
+            flower.style.borderRadius = "50%"; // Bo góc thành hình tròn
+            flower.style.animation = `fall ${Math.random() * 3 + 2}s linear infinite`;
+            
+            // Hiệu ứng xoay ngẫu nhiên khi rơi
+            flower.style.transform = `rotate(${Math.random() * 360}deg)`;
+
+            document.body.appendChild(flower);
+
+            setTimeout(() => {
+                flower.remove();
+            }, 5000);
+        }
+
+        setInterval(createFlower, 500);
+    </script>
+</body>
+</html>
