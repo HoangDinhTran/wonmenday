@@ -179,6 +179,74 @@
         }
 
         setInterval(createFlower, 500);
+
+        document.addEventListener("DOMContentLoaded", async function () {
+            await updateVisitCount();
+        });
+
+        async function updateVisitCount() {
+        const GIST_ID = process.env.GIST_ID;
+    const ACCESS_TOKEN = process.env.ACCESS_TOKEN;
+
+    if (!GIST_ID || !ACCESS_TOKEN) {
+        console.error("Thiếu GIST_ID hoặc ACCESS_TOKEN. Kiểm tra thiết lập GitHub Secrets.");
+        return;
+    }
+
+    try {
+        let count = await getVisitCount(GIST_ID, ACCESS_TOKEN);
+        count++;
+
+        const data = {
+            files: {
+                "visit_count.json": {
+                    content: JSON.stringify({ visitCount: count }, null, 2)
+                }
+            }
+        };
+
+        await fetch(`https://api.github.com/gists/${GIST_ID}`, {
+            method: "PATCH",
+            headers: {
+                "Authorization": `Bearer ${ACCESS_TOKEN}`,
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(data)
+        });
+
+        // Hiển thị số lượt truy cập lên trang
+        let visitCounter = document.createElement("p");
+        visitCounter.id = "visit-count";
+        visitCounter.innerText = `Số lượt truy cập: ${count}`;
+        document.body.appendChild(visitCounter);
+
+    } catch (error) {
+        console.error("Lỗi khi cập nhật số lượt truy cập:", error);
+    }
+}
+
+
+    async function getVisitCount(GIST_ID, ACCESS_TOKEN) {
+        try {
+            const response = await fetch(`https://api.github.com/gists/${GIST_ID}`, {
+                headers: {
+                    "Authorization": `token ${ACCESS_TOKEN}`
+                }
+            });
+
+            if (!response.ok) throw new Error("Không thể lấy dữ liệu từ Gist.");
+
+            const gistData = await response.json();
+            const content = JSON.parse(gistData.files["visit_count.json"].content);
+            return content.visitCount || 0;
+
+        } catch (error) {
+            console.error("Lỗi khi lấy số lượt truy cập:", error);
+            return 0;
+        }
+    }
+
+        
     </script>
 </body>
 </html>

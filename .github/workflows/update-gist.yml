@@ -1,0 +1,31 @@
+name: Update Gist Data
+
+on:
+  schedule:
+    - cron: "0 * * * *"  # Chạy mỗi giờ
+  workflow_dispatch:  # Cho phép chạy thủ công từ GitHub Actions UI
+  push:
+    branches:
+      - main  # Chạy khi có thay đổi trên nhánh main
+
+jobs:
+  update-gist:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Fetch Gist Data
+        run: |
+          curl -H "Authorization: token ${{ secrets.GISTID }}" \
+               "https://api.github.com/gists/${{ secrets.TOKEN_LOGIN }}" \
+               | jq '.files[].content' > data/gist_data.json
+
+      - name: Commit and Push Changes
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions@github.com"
+          git add data/gist_data.json
+          git commit -m "🔄 Update Gist Data" || echo "No changes to commit"
+          git push
