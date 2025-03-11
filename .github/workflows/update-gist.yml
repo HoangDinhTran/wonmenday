@@ -2,7 +2,7 @@ name: Update Gist Data
 
 on:
   schedule:
-    - cron: "0 * * * *"  # Chạy mỗi giờ
+    - cron: ""  # Chạy mỗi giờ
   workflow_dispatch:  # Cho phép chạy thủ công từ GitHub Actions UI
   push:
     branches:
